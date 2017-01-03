@@ -1,0 +1,51 @@
+<html>
+<head>
+	<style>
+	body {
+		position:fixed;
+		width:100%;
+		height:100%;
+		top:0;
+		left:0;
+		background:blue;
+	}
+	</style>
+	<script src="jquery-2.2.4.min.js"></script>
+</head>
+<body onload="start()" onmousedown="down()" onmouseup="up()" onmousemove="move()" onkeyup="end()">
+</body>
+<script>
+
+var ok = false;
+var C = [];
+
+function start() {
+	T0 = new Date().getTime();
+}
+
+function down(e) {
+	ok = true;
+}
+
+function up(e) {
+	ok = false;
+}
+
+function move(e) {
+	if(ok) {
+		var t = new Date().getTime() - T0;
+		C.push(t + " " + event.x + " " + event.y);
+	}
+}
+
+function end() {
+	if(event.key != " ") return;
+	console.log(C.join("\n"));
+	$("body").html("<h1>Saving data</h1>");
+	$.post( "cgi-bin/save", C.join("\n"), function( data ) {
+  		$("body").html("<h1>Done !</h1>");
+	});
+}
+
+</script>
+</html>
